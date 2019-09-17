@@ -18,9 +18,9 @@ const sessionConfig = {
     saveUninitialized: false,
 };
 
-server.use(sessionConfig)
+server.use(session(sessionConfig))
 
-const Users = require('./auth/auth-user-model.js')
+const Users = require('./auth/auth-user-model')
 
 server.post('/register', (req, res) => {
     let user = req.body;
@@ -31,6 +31,7 @@ server.post('/register', (req, res) => {
         })
         .catch(err => {
             res.status(500).json({ err })
+            console.log(err)
         })
 })
 
@@ -41,7 +42,7 @@ server.post('/login', (req, res) => {
         .then(user => {
             if (user && bcrypt.compareSync(password, user.password)) {
                 req.session.user = user
-                res.status(201).json({ message: `welcome ${user}` })
+                res.status(201).json({ message: `welcome ${username}` })
             }
             else {
                 res.status(500).json({ message: `get out of here!` })
